@@ -1,5 +1,6 @@
 <!-- This component allows a user to update a specific event's information. -->
 <template>
+  <Dialog :state="state" :msg1="msg1" @close-box="closeBox($event)"></Dialog>
   <main>
     <div>
       <!--Header-->
@@ -201,11 +202,13 @@ import { required } from '@vuelidate/validators'
 import { useLoggedInUserStore } from "../store/loggedInUser";
 import { getEventById, getEventAttendees, getServices, updateEvent, deleteEvent } from '../api/api'
 import { useToast } from 'vue-toastification'
+import Dialog from '@/components/Dialog.vue'
 
 //Notifications
 const toast = useToast()
 
 export default {
+  components: {Dialog},
   data() {
     return {
       //variable to hold clients for selected event
@@ -229,6 +232,8 @@ export default {
       },
       // variable stores the ID of the row that the mouse is currently hovering over (to highlight the row red)
       hoverId: null,
+      state:false,
+      msg1: 'Are you sure you want to delete this event'
     }
   },
   setup() {
@@ -296,18 +301,25 @@ export default {
 
     // method to make the API call to delete the event - can only be deleted if no attendees are in event
     async submitDeleteEvent() {
-      try {
-        if (this.event.attendees != 0)
-        {
-          toast.info('Event can not be deleted since it has attendees.')
-          return
-        }
-        const response = await deleteEvent(this.$route.params.id);
-        toast.success(response)
-        this.$router.push('/findevents')
-      } catch (error) {
-        toast.error(error)
-      }
+      this.flipState()
+      // try {
+      //   if (this.event.attendees != 0)
+      //   {
+      //     toast.info('Event can not be deleted since it has attendees.')
+      //     return
+      //   }
+      //   const response = await deleteEvent(this.$route.params.id);
+      //   toast.success(response)
+      //   this.$router.push('/findevents')
+      // } catch (error) {
+      //   toast.error(error)
+      // }
+    },
+    flipState(){
+      this.state = true
+    },
+    closeBox(data){
+      this.state = data
     },
   }
 }

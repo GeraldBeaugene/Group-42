@@ -1,5 +1,6 @@
 <!-- This view allows a user to view/update a specific client's information. -->
 <template>
+  <Dialog :state="state" :msg1="msg1" @close-box="closeBox($event)"></Dialog>
   <main>
     <!--Header-->
     <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
@@ -238,6 +239,7 @@ import VueMultiselect from 'vue-multiselect'
 import { useLoggedInUserStore } from "../store/loggedInUser";
 import { getClientById, getClientEvents, getNonClientEvents, registerAttendee, deregisterAttendee, updateClient, deleteClientbyId } from '../api/api'
 import { useToast } from 'vue-toastification'
+import Dialog from '@/components/Dialog.vue'
 
 //Notifications
 const toast = useToast()
@@ -246,6 +248,7 @@ export default {
   // register components
   components: {
     VueMultiselect,
+    Dialog,
   },
   setup() {
     // register Vuelidate and loggedIn store
@@ -280,7 +283,9 @@ export default {
         }
       },
       // variable stores the ID of the row that the mouse is currently hovering over (to highlight the row red)
-      hoverId: null
+      hoverId: null,
+      state:false,
+      msg1: 'Are you sure you want to delete this client',
     }
   },
   validations() {
@@ -405,13 +410,20 @@ export default {
 
     // method called when user attempts to delete client
     async submitDeleteClient() {
-      try {
-        const response = await deleteClientbyId(this.$route.params.id);
-        toast.success(response)
-        this.$router.push('/findclient')
-      } catch (error) {
-        toast.error(error);
-      }
+      this.flipState()
+      // try {
+      //   const response = await deleteClientbyId(this.$route.params.id);
+      //   toast.success(response)
+      //   this.$router.push('/findclient')
+      // } catch (error) {
+      //   toast.error(error);
+      // }
+    },
+    flipState(){
+      this.state = true
+    },
+    closeBox(data){
+      this.state = data
     },
   }
 }
