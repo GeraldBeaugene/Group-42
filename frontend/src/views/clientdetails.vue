@@ -421,6 +421,7 @@ export default {
     },
     flipState(){
       this.state = true
+      // comment
     },
     closeBox(data){
       this.state = data
