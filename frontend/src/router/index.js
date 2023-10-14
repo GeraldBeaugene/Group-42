@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useLoggedInUserStore } from '../store/loggedInUser'
+import { useLoggedInUserStore } from '@/store/loggedInUser'
 
 // make all paths and names lowercase for consistency
 const routes = [

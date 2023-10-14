@@ -6,6 +6,7 @@
     <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
       Client Details
     </h1>
+    <Profile/>
     <div class="px-10 py-20">
       <!-- grid container -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
@@ -240,7 +241,7 @@ import { useLoggedInUserStore } from "../store/loggedInUser";
 import { getClientById, getClientEvents, getNonClientEvents, registerAttendee, deregisterAttendee, updateClient, deleteClientbyId } from '../api/api'
 import { useToast } from 'vue-toastification'
 import Dialog from '@/components/Dialog.vue'
-
+import Profile from '@/components/Profile.vue'
 //Notifications
 const toast = useToast()
 
@@ -249,6 +250,7 @@ export default {
   components: {
     VueMultiselect,
     Dialog,
+    Profile
   },
   setup() {
     // register Vuelidate and loggedIn store
