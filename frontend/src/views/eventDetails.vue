@@ -266,6 +266,16 @@ export default {
         getEventById(this.$route.params.id),
         getEventAttendees(this.$route.params.id),
         getServices(),
+        // Sprint 2 To improve the data loading for these calls we will combine the first two calls into one call.
+        //This new call will make a request to our new singular api route in the api.js file that will send a request to the backend
+        //routes js files. We will add a route so that it will return all the same code that getEventById and getEventsAttendees
+        //would normally but package it into an array with objects inside corresponding to getEventById and getEventsAttendees
+        //For now we will leave getServices as its own call since it is a get request that takes no parms and we are unsure
+        //of the complexity of combining it with api calls that do take parms
+        //An example would look like this
+        //try{
+        //const [response] = await Promise.all([newCall(this.$route.parms.id)])
+        //getServices()])
       ]);
 
       eventResponse.date = new Date(eventResponse.date).toISOString().substring(0, 10);
@@ -273,6 +283,10 @@ export default {
       this.event = eventResponse;
       this.clients = clientsResponse;
       this.services = servicesResponse;
+      // this.event = response[0];
+      // this.clients = response[1];
+      // this.services = servicesResponse;
+
      // this.inactiveServices = servicesResponse.filter(item => item.status === "Inactive")
 
     } catch (error) {

@@ -319,11 +319,23 @@ export default {
         getClientById(this.$route.params.id),
         getClientEvents(this.$route.params.id),
         getNonClientEvents(this.$route.params.id),
+          // Sprint 2 To improve the data loading for these calls we will combine all three of these calls into one call.
+          //This one call will make a request to our new singular api route in the api.js file that will send a request to the backend
+          //routes js files. We will add a route so that it will return all the same code that getClientById, getClientEvents, and
+          //getNonClientEvents would normally but package it into an array with objects inside corresponding to getClientById, getClientEvents, and
+        //getNonClientEvents.
+          //An example would look like this
+          //try{
+          //const [response] = await Promise.all([newCall(this.$route.parms.id)])
       ]);
 
       this.client = clientResponse;
       this.clientEvents = clientEventsResponse;
       this.eventsFiltered = nonClientEventsResponse;
+      // this.client = response[0];
+      // this.clientEvents = response[1];
+      // this.eventsFiltered = response[2};
+
 
     } catch (error) {
       toast.error('error loading data:', error)
