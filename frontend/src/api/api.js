@@ -81,6 +81,7 @@ export const getEvents = async () => {
 };
 
 // API call to GET single event by ID
+//Sprint 2 this api call will be merged into one to improve data loading as explained on the event details page
 export const getEventById = async (id) => {
   try {
     const response = await apiClient.get(`/events/id/${id}`);
@@ -111,6 +112,7 @@ export const searchEvents = async (query) => {
 };
 
 // API call to GET events for which a client is signed up
+//Sprint 2 this api call will be merged into one to improve data loading as explained on the client details page
 export const getClientEvents = async (id) => {
   try {
     const response = await apiClient.get(`/events/client/${id}`);
@@ -121,6 +123,7 @@ export const getClientEvents = async (id) => {
 };
 
 // API call to GET events for which a client is not signed up
+//Sprint 2 this api call will be merged into one to improve data loading as explained on the client details page
 export const getNonClientEvents = async (id) => {
   try {
     const response = await apiClient.get(`/events/client/${id}/not-registered`);
@@ -131,6 +134,7 @@ export const getNonClientEvents = async (id) => {
 };
 
 // API call to GET all attendees for an event
+//Sprint 2 this api call will be merged into one to improve data loading as explained on the events details page
 export const getEventAttendees = async (id) => {
   try {
     const response = await apiClient.get(`/events/attendees/${id}`);
@@ -240,6 +244,7 @@ export const getClients = async () => {
 };
 
 // API call to GET single client by ID
+//Sprint 2 this api call will be merged into one to improve data loading as explained on the client details page
 export const getClientById = async (id) => {
   try {
     const response = await apiClient.get(`/clients/id/${id}`);

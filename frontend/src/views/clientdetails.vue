@@ -1,10 +1,12 @@
 <!-- This view allows a user to view/update a specific client's information. -->
 <template>
+  <Dialog :state="state" :msg1="msg1" @close-box="closeBox($event)"></Dialog>
   <main>
     <!--Header-->
     <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
       Client Details
     </h1>
+    <Profile/>
     <div class="px-10 py-20">
       <!-- grid container -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
@@ -238,7 +240,8 @@ import VueMultiselect from 'vue-multiselect'
 import { useLoggedInUserStore } from "../store/loggedInUser";
 import { getClientById, getClientEvents, getNonClientEvents, registerAttendee, deregisterAttendee, updateClient, deleteClientbyId } from '../api/api'
 import { useToast } from 'vue-toastification'
-
+import Dialog from '@/components/Dialog.vue'
+import Profile from '@/components/Profile.vue'
 //Notifications
 const toast = useToast()
 
@@ -246,6 +249,8 @@ export default {
   // register components
   components: {
     VueMultiselect,
+    Dialog,
+    Profile
   },
   setup() {
     // register Vuelidate and loggedIn store
@@ -280,7 +285,9 @@ export default {
         }
       },
       // variable stores the ID of the row that the mouse is currently hovering over (to highlight the row red)
-      hoverId: null
+      hoverId: null,
+      state:false,
+      msg1: 'Are you sure you want to delete this client',
     }
   },
   validations() {
@@ -312,11 +319,23 @@ export default {
         getClientById(this.$route.params.id),
         getClientEvents(this.$route.params.id),
         getNonClientEvents(this.$route.params.id),
+          // Sprint 2 To improve the data loading for these calls we will combine all three of these calls into one call.
+          //This one call will make a request to our new singular api route in the api.js file that will send a request to the backend
+          //routes js files. We will add a route so that it will return all the same code that getClientById, getClientEvents, and
+          //getNonClientEvents would normally but package it into an array with objects inside corresponding to getClientById, getClientEvents, and
+        //getNonClientEvents.
+          //An example would look like this
+          //try{
+          //const [response] = await Promise.all([newCall(this.$route.parms.id)])
       ]);
 
       this.client = clientResponse;
       this.clientEvents = clientEventsResponse;
       this.eventsFiltered = nonClientEventsResponse;
+      // this.client = response[0];
+      // this.clientEvents = response[1];
+      // this.eventsFiltered = response[2};
+
 
     } catch (error) {
       toast.error('error loading data:', error)
@@ -405,13 +424,21 @@ export default {
 
     // method called when user attempts to delete client
     async submitDeleteClient() {
-      try {
-        const response = await deleteClientbyId(this.$route.params.id);
-        toast.success(response)
-        this.$router.push('/findclient')
-      } catch (error) {
-        toast.error(error);
-      }
+      this.flipState()
+      // try {
+      //   const response = await deleteClientbyId(this.$route.params.id);
+      //   toast.success(response)
+      //   this.$router.push('/findclient')
+      // } catch (error) {
+      //   toast.error(error);
+      // }
+    },
+    flipState(){
+      this.state = true
+      // comment
+    },
+    closeBox(data){
+      this.state = data
     },
   }
 }
