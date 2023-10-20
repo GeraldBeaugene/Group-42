@@ -1,4 +1,7 @@
 <!-- This is the main frontend file. It displays a navigation bar and rendered components. -->
+<!-- Test comment for commit-->
+
+
 
 <template>
   <main class="flex flex-row">
