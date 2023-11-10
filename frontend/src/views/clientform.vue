@@ -9,6 +9,7 @@
       <!-- form field -->
       <!-- @submit.prevent stops the submit event from reloading the page-->
       <form @submit.prevent="submitForm">
+        <Profile/>
         <!-- grid container -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
           <h2 class="text-2xl font-bold">Personal Details</h2>
@@ -181,11 +182,13 @@ import useVuelidate from '@vuelidate/core'
 import { required, email, numeric, minLength, maxLength } from '@vuelidate/validators'
 import { createClient } from '../api/api'
 import { useToast } from 'vue-toastification'
+import Profile from '@/components/Profile.vue'
 
 //Notifications
 const toast = useToast()
 
 export default {
+  components:{Profile},
   data() {
     return {
       //client variable to hold new client information
