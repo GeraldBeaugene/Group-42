@@ -390,3 +390,13 @@ export const deleteService = async (id) => {
     throw error.response.data;
   }
 };
+
+//New Client Details API
+export const NewClientDetailsAPI = async (id) => {
+  try {
+    const response = await apiClient.get(`/improved_get/client_details/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+}

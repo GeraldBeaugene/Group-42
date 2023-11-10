@@ -1,6 +1,6 @@
 <!-- This view allows a user to view/update a specific client's information. -->
 <template>
-  <Dialog :state="state" :msg1="msg1" @close-box="closeBox($event)"></Dialog>
+  <Dialog :state="state" :msg1="msg1" @Dialog-buttons="closeBox($event)"></Dialog>
   <main>
     <!--Header-->
     <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
@@ -238,7 +238,16 @@ import useVuelidate from '@vuelidate/core'
 import { required, email, numeric, minLength, maxLength } from '@vuelidate/validators'
 import VueMultiselect from 'vue-multiselect'
 import { useLoggedInUserStore } from "../store/loggedInUser";
-import { getClientById, getClientEvents, getNonClientEvents, registerAttendee, deregisterAttendee, updateClient, deleteClientbyId } from '../api/api'
+import {
+  getClientById,
+  getClientEvents,
+  getNonClientEvents,
+  registerAttendee,
+  deregisterAttendee,
+  updateClient,
+  deleteClientbyId,
+  NewClientDetailsAPI
+} from '../api/api'
 import { useToast } from 'vue-toastification'
 import Dialog from '@/components/Dialog.vue'
 import Profile from '@/components/Profile.vue'
@@ -288,6 +297,7 @@ export default {
       hoverId: null,
       state:false,
       msg1: 'Are you sure you want to delete this client',
+      dialog_decision: null
     }
   },
   validations() {
@@ -315,26 +325,13 @@ export default {
     // when component is mounted, data is loaded
     // get client information, events the client is registered in, and events that client is not registered in
     try {
-      const [clientResponse, clientEventsResponse, nonClientEventsResponse] = await Promise.all([
-        getClientById(this.$route.params.id),
-        getClientEvents(this.$route.params.id),
-        getNonClientEvents(this.$route.params.id),
-          // Sprint 2 To improve the data loading for these calls we will combine all three of these calls into one call.
-          //This one call will make a request to our new singular api route in the api.js file that will send a request to the backend
-          //routes js files. We will add a route so that it will return all the same code that getClientById, getClientEvents, and
-          //getNonClientEvents would normally but package it into an array with objects inside corresponding to getClientById, getClientEvents, and
-        //getNonClientEvents.
-          //An example would look like this
-          //try{
-          //const [response] = await Promise.all([newCall(this.$route.parms.id)])
-      ]);
-
-      this.client = clientResponse;
-      this.clientEvents = clientEventsResponse;
-      this.eventsFiltered = nonClientEventsResponse;
-      // this.client = response[0];
-      // this.clientEvents = response[1];
-      // this.eventsFiltered = response[2};
+      const response = await NewClientDetailsAPI(this.$route.params.id)
+      // This is the replacement call for the previous 3 calls
+      // Instead of 3 calls it makes one call that returns 3 objects
+      // and assigns client, clientEvents and eventsFiltered accordingly
+      this.client = response.client_info
+      this.clientEvents = response.reg_events
+      this.eventsFiltered = response.non_reg_events
 
 
     } catch (error) {
@@ -425,21 +422,28 @@ export default {
     // method called when user attempts to delete client
     async submitDeleteClient() {
       this.flipState()
-      // try {
-      //   const response = await deleteClientbyId(this.$route.params.id);
-      //   toast.success(response)
-      //   this.$router.push('/findclient')
-      // } catch (error) {
-      //   toast.error(error);
-      // }
     },
     flipState(){
       this.state = true
       // comment
     },
     closeBox(data){
-      this.state = data
+      this.state = data.close
+      this.dialog_decision = data.choice
     },
+  },
+  watch: {
+    dialog_decision: async function(value) {
+      if (value) {
+        try {
+          const response = await deleteClientbyId(this.$route.params.id);
+          toast.success(response)
+          this.$router.push('/findclient')
+        } catch (error) {
+          toast.error(error);
+        }
+      }
+    }
   }
 }
 </script>

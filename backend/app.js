@@ -45,6 +45,7 @@ app.use('/events', require('./routes/events'));
 app.use('/org', require('./routes/org'));
 app.use('/services', require('./routes/services'));
 app.use('/users', require('./routes/users'));
+app.use('/improved_get', require('./routes/improved_get'));
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
