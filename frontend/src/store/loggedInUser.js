@@ -25,7 +25,7 @@ export const useLoggedInUserStore = defineStore({
         const decodedToken = jwt_decode(token);
         this.$patch({
           isLoggedIn: true,
-          role: 'editor',
+          role: decodedToken.role,
           name: decodedToken.name
         });
         this.$router.push("/");
