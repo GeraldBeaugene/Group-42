@@ -7,8 +7,8 @@
         <h3 v-if="state">This action is irreversible</h3>
         <hr>
         <div class="row" v-if="state">
-          <button class="btn btn-outline-success col-sm-4" @click="close()">Cancel</button>
-          <button class="btn btn-outline-danger col-sm-4" @click="close()" id="confirm">Confirm</button>
+          <button class="btn btn-outline-success col-sm-4" @click="close(false)">Cancel</button>
+          <button class="btn btn-outline-danger col-sm-4" @click="close(true)" id="confirm">Confirm</button>
         </div>
       </div>
     </div>
@@ -24,8 +24,8 @@ export default {
     }
   },
   methods:{
-    close(){
-      this.$emit('close-box', false)
+    close(choice){
+      this.$emit('Dialog-buttons', {close:false, choice:choice})
     },
   }}
 </script>
