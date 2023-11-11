@@ -1,6 +1,6 @@
 <!-- This view allows a user to update a specific service's information. -->
 <template>
-  <Dialog :state="state" :msg1="msg1" @close-box="closeBox($event)"></Dialog>
+  <Dialog :state="state" :msg1="msg1" @Dialog-buttons="closeBox($event)"></Dialog>
   <main>
     <!--Header-->
     <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
@@ -121,7 +121,7 @@
 import useVuelidate from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import { useLoggedInUserStore } from "../store/loggedInUser";
-import { getServiceById, getEventsByServiceId, updateService, deleteService } from '../api/api'
+import {getServiceById, getEventsByServiceId, updateService, deleteService, deleteEvent} from '../api/api'
 import { useToast } from 'vue-toastification'
 import Dialog from '@/components/Dialog.vue'
 
@@ -143,7 +143,8 @@ export default {
       // variable stores the ID of the row that the mouse is currently hovering over (to highlight the row red)
       hoverId: null,
       state: false,
-      msg1: 'Are you sure you want to delete this service'
+      msg1: 'Are you sure you want to delete this service',
+      dialog_decision: null
     }
   },
   setup() {
@@ -207,25 +208,32 @@ export default {
     // method to make the API call to delete the service - can only be deleted service is not used in any event
     async submitDeleteService() {
       this.flipState()
-      // try {
-      //   if (this.events.length != 0)
-      //   {
-      //     toast.info('Service can not be deleted since it is being used by events.')
-      //     return
-      //   }
-      //   const response = await deleteService(this.$route.params.id);
-      //   toast.success(response)
-      //   this.$router.push('/findservice')
-      // } catch (error) {
-      //   toast.error(error)
-      // }
     },
     flipState(){
       this.state = true
     },
     closeBox(data){
-      this.state = data
+      this.state = data.close
+      this.dialog_decision = data.choice
     },
+  },
+  watch: {
+    dialog_decision: async function (value) {
+      if (value) {
+        try {
+            if (this.events.length != 0)
+            {
+              toast.info('Service can not be deleted since it is being used by events.')
+              return
+            }
+            const response = await deleteService(this.$route.params.id);
+            toast.success(response)
+            this.$router.push('/findservice')
+          } catch (error) {
+            toast.error(error)
+          }
+      }
+    }
   }
 }
 </script>
