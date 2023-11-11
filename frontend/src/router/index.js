@@ -29,7 +29,7 @@ const routes = [
     path: '/clientdetails/:id',
     name: 'clientdetails',
     meta: { requiresAuth: true },
-    component: () => import('../views/clientDetails.vue')
+    component: () => import('../views/clientdetails.vue')
   },
   {
     path: '/eventform',
